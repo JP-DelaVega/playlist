@@ -1,0 +1,19 @@
+
+@import "tailwindcss";
+
+
+body{
+  background-color: black;
+  color:white;
+}
+
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: spin-slow 20s linear infinite; /* 4 seconds per rotation */
+}
