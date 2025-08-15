@@ -4,6 +4,7 @@ import cat from "./assets/cat.gif";
 import flower2 from "./assets/flower2.gif";
 import flower3 from "./assets/flower3.gif";
 import totoro2 from "./assets/totoro2.gif";
+import beeflying from "./assets/beeflying.gif";
 import YouTubePlayer from "./components/Music";
 import ClickSpark from "./components/ClickSpark";
 import LightRays from "./components/LightRays";
@@ -38,6 +39,11 @@ function App() {
           src={flower3}
           alt="flower3"
           className="absolute bottom-0 left-16 h-20 lg:h-40 z-20"
+        />
+        <img
+          src={beeflying}
+          alt="beeflying"
+          className="absolute bottom-30 left-1 h-20 lg:h-40 hover:h-22 lg:hover:h-50 z-20 transition-all duration-300"
         />
 
         <LightRays

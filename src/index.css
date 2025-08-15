@@ -17,3 +17,4 @@ body{
 .spin-slow {
   animation: spin-slow 20s linear infinite; /* 4 seconds per rotation */
 }
+
