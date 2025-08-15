@@ -9,12 +9,20 @@ import YouTubePlayer from "./components/Music";
 import ClickSpark from "./components/ClickSpark";
 import LightRays from "./components/LightRays";
 import Sidebar from "./components/Sidebar";
-
+import Fireflies from "./components/Fireflies";
 function App() {
   const [selectedId, setSelectedId] = useState<string>("ZGFg-842-Ug");
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const handleSelect = (id: string): void => {
     setSelectedId(id);
+  };
+
+  const handlePlay = (): void => {
+    setIsPlaying(true);
+  };
+  const handleStop = (): void => {
+    setIsPlaying(false);
   };
   return (
     <ClickSpark
@@ -25,6 +33,8 @@ function App() {
       duration={500}
     >
       <div className="relative h-screen w-screen">
+        <Fireflies trigger={isPlaying} count={12} />
+
         <img
           src={flower2}
           alt="flower2"
@@ -54,7 +64,7 @@ function App() {
           rayLength={5.2}
           followMouse={true}
           mouseInfluence={0.1}
-          noiseAmount={0.1}
+          noiseAmount={0.2}
           distortion={0.05}
           className="custom-rays"
         />
@@ -66,20 +76,30 @@ function App() {
               <img
                 src={vinyl}
                 alt="Vinyl"
-                className="transition-all duration-1000 transform origin-center spin-slow w-full h-full z-0"
+                className={`transition-all duration-1000 transform origin-center w-full h-full z-0 ${
+                  isPlaying && "spin-slow"
+                }`}
               />
-              <img
-                src={cat}
-                alt="Cat"
-                className="absolute top-3/5  left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 hover:h-30 transition-all duration-300"
-              />
-              <img
-                src={totoro2}
-                alt="totoro2"
-                className="absolute top-[-48px] left-5/11 scale-x-[-1] h-12 hover:h-14 hover:top-[-56px] z-20 transition-all duration-300"
-              />
+              {isPlaying && (
+                <>
+                  <img
+                    src={cat}
+                    alt="Cat"
+                    className="absolute top-3/5  left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 hover:h-30 transition-all duration-300"
+                  />
+                  <img
+                    src={totoro2}
+                    alt="totoro2"
+                    className="absolute top-[-48px] left-5/11 scale-x-[-1] h-12 hover:h-14 hover:top-[-56px] z-20 transition-all duration-300"
+                  />
+                </>
+              )}
             </div>
-            <YouTubePlayer youtubeId={selectedId}></YouTubePlayer>
+            <YouTubePlayer
+              youtubeId={selectedId}
+              handlePlay={handlePlay}
+              handleStop={handleStop}
+            ></YouTubePlayer>
           </div>
         </div>
       </div>

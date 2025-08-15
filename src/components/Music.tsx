@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import totoro from "../assets/totoro.gif";
+import totoro3 from "../assets/totoro3.gif";
 
 declare global {
   interface Window {
@@ -10,9 +11,15 @@ declare global {
 
 type PropsType = {
   youtubeId: string;
+  handlePlay: () => void;
+  handleStop: () => void;
 };
 
-const YouTubePlayer: React.FC<PropsType> = ({ youtubeId }) => {
+const YouTubePlayer: React.FC<PropsType> = ({
+  youtubeId,
+  handlePlay,
+  handleStop,
+}) => {
   const playerRef = useRef<HTMLDivElement>(null);
   const [player, setPlayer] = useState<any>(null);
   const [duration, setDuration] = useState(0);
@@ -50,6 +57,24 @@ const YouTubePlayer: React.FC<PropsType> = ({ youtubeId }) => {
       });
     };
   }, []); // run only once
+
+  //handle play
+  const isPlaying = (): void => {
+    player.playVideo();
+    handlePlay();
+  };
+
+  //handle pause
+  const isPause = (): void => {
+    player.pauseVideo();
+    handleStop();
+  };
+
+  //handle stop
+  const isStop = (): void => {
+    player.stopVideo();
+    handleStop();
+  };
 
   // Update player when youtubeId changes
   useEffect(() => {
@@ -103,11 +128,25 @@ const YouTubePlayer: React.FC<PropsType> = ({ youtubeId }) => {
         alt="totoro"
         className="absolute top-[-40px] h-10 hover:h-12 hover:top-[-48px] z-20 transition-all duration-300"
       />
-      <div
-        ref={playerRef}
-        className="w-full h-40 rounded-xl shadow-inner border border-[#8a5f30] bg-oldschool-radial flex justify-center items-center text-[#3c2e21] text-[1.3rem] font-bold font-mono"
-      >
-        MUSIC PLAYER
+      <img
+        src={totoro3}
+        alt="totoro3"
+        className="absolute top-[-30px] left-5 h-8 hover:h-10 hover:top-[-38px] z-20 transition-all duration-300"
+      />
+      <div className="relative w-full h-40 rounded-xl shadow-inner border border-[#8a5f30] bg-oldschool-radial flex justify-center items-center text-[#3c2e21] text-[1.3rem] font-bold font-mono">
+        {/* YouTube player container */}
+        <div
+          ref={playerRef}
+          className="absolute inset-0 w-full h-full rounded-xl overflow-hidden"
+        >
+          MUSIC PLAYER
+        </div>
+
+        {/* Overlay to block clicks */}
+        <div
+          className="absolute inset-0 z-10"
+          style={{ backgroundColor: "transparent", pointerEvents: "auto" }}
+        ></div>
       </div>
 
       {/* Seek slider */}
@@ -145,9 +184,9 @@ const YouTubePlayer: React.FC<PropsType> = ({ youtubeId }) => {
               key={action}
               onClick={() => {
                 if (!player) return;
-                if (action === "Play") player.playVideo();
-                else if (action === "Pause") player.pauseVideo();
-                else if (action === "Stop") player.stopVideo();
+                if (action === "Play") isPlaying();
+                else if (action === "Pause") isPause();
+                else if (action === "Stop") isStop();
               }}
               className={`px-5 py-2 rounded-full font-bold transition-colors duration-300 border-2 ${colors[action]} font-mono select-none text-shadow-oldschool`}
             >
