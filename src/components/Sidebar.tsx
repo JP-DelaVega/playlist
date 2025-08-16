@@ -2,37 +2,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { getPlaylistVideos } from "../services/youtubePlaylist";
 import Card from "./Card";
-type YouTubePlaylistItem = {
-  kind: string;
-  etag: string;
-  id: string;
-  snippet: {
-    publishedAt: string;
-    channelId: string;
-    title: string;
-    description: string;
-    thumbnails: {
-      default: { url: string; width: number; height: number };
-      medium: { url: string; width: number; height: number };
-      high: { url: string; width: number; height: number };
-      standard?: { url: string; width: number; height: number };
-      maxres?: { url: string; width: number; height: number };
-    };
-    channelTitle: string;
-    playlistId: string;
-    position: number;
-    resourceId: {
-      kind: string;
-      videoId: string;
-    };
-    videoOwnerChannelTitle: string;
-    videoOwnerChannelId: string;
-  };
-  contentDetails: {
-    videoId: string;
-    videoPublishedAt: string;
-  };
-};
+import type { YouTubePlaylistItem } from "../types/youtube";
 
 type SidebarProps = {
   handleSelect: (id: string) => void;

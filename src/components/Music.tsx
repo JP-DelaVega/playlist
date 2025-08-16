@@ -13,12 +13,14 @@ type PropsType = {
   youtubeId: string;
   handlePlay: () => void;
   handleStop: () => void;
+  getRandomVideo: () => void;
 };
 
 const YouTubePlayer: React.FC<PropsType> = ({
   youtubeId,
   handlePlay,
   handleStop,
+  getRandomVideo,
 }) => {
   const playerRef = useRef<HTMLDivElement>(null);
   const [player, setPlayer] = useState<any>(null);
@@ -26,16 +28,22 @@ const YouTubePlayer: React.FC<PropsType> = ({
   const [currentTime, setCurrentTime] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
 
-  // Load YouTube API & initialize player
+  // Initialize YouTube player
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
       document.body.appendChild(tag);
+    } else {
+      initPlayer();
     }
 
     window.onYouTubeIframeAPIReady = () => {
-      if (!playerRef.current) return;
+      initPlayer();
+    };
+
+    function initPlayer() {
+      if (!playerRef.current) return; // Ensure node exists
 
       const ytPlayer = new window.YT.Player(playerRef.current, {
         height: "230",
@@ -45,35 +53,42 @@ const YouTubePlayer: React.FC<PropsType> = ({
           controls: 0,
           modestbranding: 1,
           rel: 0,
-          autoplay: 1, // autoplay enabled
+          autoplay: 1,
         },
         events: {
           onReady: (event: any) => {
             setPlayer(event.target);
             setDuration(event.target.getDuration());
-            event.target.playVideo(); // play immediately
+            event.target.playVideo();
+          },
+          onStateChange: (event: any) => {
+            if (event.data === window.YT.PlayerState.ENDED) {
+              console.log('66')
+              getRandomVideo();
+            }
           },
         },
       });
-    };
-  }, []); // run only once
+    }
+  }, []);
 
-  //handle play
+  // Handle play
   const isPlaying = (): void => {
     player.playVideo();
     handlePlay();
   };
 
-  //handle pause
+  // Handle pause
   const isPause = (): void => {
     player.pauseVideo();
     handleStop();
   };
 
-  //handle stop
+  // Handle stop
   const isStop = (): void => {
     player.stopVideo();
     handleStop();
+    setCurrentTime(0); // reset slider
   };
 
   // Update player when youtubeId changes

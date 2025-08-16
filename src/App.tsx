@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import vinyl from "./assets/vinly.png";
 import cat from "./assets/cat.gif";
 import flower2 from "./assets/flower2.gif";
@@ -10,9 +10,40 @@ import ClickSpark from "./components/ClickSpark";
 import LightRays from "./components/LightRays";
 import Sidebar from "./components/Sidebar";
 import Fireflies from "./components/Fireflies";
+import type { YouTubePlaylistItem } from "./types/youtube";
+import { getPlaylistVideos } from "./services/youtubePlaylist";
+
 function App() {
   const [selectedId, setSelectedId] = useState<string>("ZGFg-842-Ug");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [playlist, setPlaylist] = useState<YouTubePlaylistItem[]>([]);
+
+  const getData = async () => {
+    const data = await getPlaylistVideos();
+    setPlaylist(data.items);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getRandomVideo = (): void => {
+    if (playlist.length === 0) return;
+
+    let randomIndex: number;
+    let randomVideo: YouTubePlaylistItem;
+
+    do {
+      randomIndex = Math.floor(Math.random() * playlist.length);
+      randomVideo = playlist[randomIndex];
+    } while (
+      playlist.length > 1 &&
+      randomVideo.contentDetails.videoId === selectedId
+    );
+
+    setSelectedId(randomVideo.contentDetails.videoId);
+    console.log("asdd11asdasd");
+  };
 
   const handleSelect = (id: string): void => {
     setSelectedId(id);
@@ -99,6 +130,7 @@ function App() {
               youtubeId={selectedId}
               handlePlay={handlePlay}
               handleStop={handleStop}
+              getRandomVideo={getRandomVideo}
             ></YouTubePlayer>
           </div>
         </div>
